@@ -19,7 +19,14 @@ public class DatabaseInit {
             String createKeywordsTable = "CREATE TABLE IF NOT EXISTS keywords (" +
                                             "id IDENTITY PRIMARY_KEY, " +
                                             "name VARCHAR(255) UNIQUE)";
+            String createNoteKeywordsTable = "CREATE TABLE IF NOT EXISTS note_keywords(" +
+                                            "note_id BIGINT, " +
+                                            "keyword_id BIGINT, " +
+                                            "FOREIGN KEY (note_id) REFERENCES notes(id)" +
+                                            "FOREIGN KEY (keyword_id) REFERENCES keywords(id))";
+            statement.execute(createNotesTable);
+            statement.execute(createKeywordsTable);
+            statement.execute(createNoteKeywordsTable);
         }
-
     }
 }
