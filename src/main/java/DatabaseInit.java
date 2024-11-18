@@ -3,6 +3,11 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+
+/**
+ * Class used to initialize an H2 database, 3 tables are being created:
+ * one for the notes, one for the keywords and the third one as a joint table in case a note has several keywords
+ */
 public class DatabaseInit {
     private static final String DB_URL =  "jdbc:h2:./data/notesdb";
     private static final  String user = "user";
@@ -28,5 +33,8 @@ public class DatabaseInit {
             statement.execute(createKeywordsTable);
             statement.execute(createNoteKeywordsTable);
         }
+
+
+
     }
 }
