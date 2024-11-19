@@ -1,3 +1,5 @@
+import config.Config;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -9,9 +11,9 @@ import java.sql.Statement;
  * one for the notes, one for the keywords and the third one as a joint table in case a note has several keywords
  */
 public class DatabaseInit {
-    private static final String DB_URL =  "jdbc:h2:./data/notesdb";
-    private static final  String user = "user";
-    private static final String password = "soSecret";
+    private static final String DB_URL = Config.getProperties("db.url");
+    private static final  String user = Config.getProperties("db.user");
+    private static final String password = Config.getProperties("db.password");
 
     public static void Initialize() throws SQLException {
         try(Connection connection = DriverManager.getConnection(DB_URL, user, password);
