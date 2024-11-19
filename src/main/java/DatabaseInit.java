@@ -20,16 +20,16 @@ public class DatabaseInit {
             Statement statement = connection.createStatement()) {
 
             String createNotesTable = "CREATE TABLE IF NOT EXISTS notes (" +
-                                        "id IDENTITY PRIMARY KEY, " +
+                                        "id IDENTITY, " +
                                         "content TEXT, " +
                                         "timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP)";
             String createKeywordsTable = "CREATE TABLE IF NOT EXISTS keywords (" +
-                                            "id IDENTITY PRIMARY_KEY, " +
+                                            "id IDENTITY, " +
                                             "name VARCHAR(255) UNIQUE)";
             String createNoteKeywordsTable = "CREATE TABLE IF NOT EXISTS note_keywords(" +
                                             "note_id BIGINT, " +
                                             "keyword_id BIGINT, " +
-                                            "FOREIGN KEY (note_id) REFERENCES notes(id)" +
+                                            "FOREIGN KEY (note_id) REFERENCES notes(id), " +
                                             "FOREIGN KEY (keyword_id) REFERENCES keywords(id))";
             statement.execute(createNotesTable);
             statement.execute(createKeywordsTable);

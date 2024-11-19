@@ -1,5 +1,6 @@
 package config;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -10,10 +11,7 @@ public class Config {
     static {
         String env = System.getProperty("env", "prod");
         String configFile = env.equals("test") ? "app-test.properties" : "app.properties";
-        try (InputStream input = Config.class.getClassLoader().getResourceAsStream(configFile)){
-            if(input == null) {
-                throw new RuntimeException("Can not find " + configFile);
-            }
+        try (FileInputStream input = new FileInputStream(configFile)){
             properties.load(input);
         } catch (IOException e) {
             throw new RuntimeException("Error loading " + configFile, e);
