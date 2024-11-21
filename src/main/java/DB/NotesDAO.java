@@ -3,6 +3,7 @@ package DB;
 import Entities.NotesEntity;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,6 +22,11 @@ public class NotesDAO implements GenericDAO<NotesEntity, Long> {
     }
 
 
+    /**
+     * Saving a note to the database
+     * @param entity
+     * @throws SQLException
+     */
     @Override
     public void save(NotesEntity entity) throws SQLException {
         String sqlStatement = "INSERT INTO notes (content) VALUES (?)";
@@ -36,7 +42,7 @@ public class NotesDAO implements GenericDAO<NotesEntity, Long> {
             throw new SQLException("Error registering the note", e);
         }
     }
-    // NOTE: Since this delete() will be used by all entities in the same way, should we create an abstract class that will implements our DAO interface and write a common method ?
+    // NOTE: Since this delete() will be used by all entities in the same way, should we create an abstract class that will implements our DAO interface and write a common delete() method ?
     /**
      * Method we will use to delete a note from the database
      * @param id which is the note's ID
@@ -56,17 +62,36 @@ public class NotesDAO implements GenericDAO<NotesEntity, Long> {
     }
 
     @Override
-    public void update(Long aLong) throws SQLException {
+    public void update(Long id) throws SQLException {
 
     }
 
     @Override
     public List<NotesEntity> getAll() throws SQLException {
-        return List.of();
+        List<NotesEntity> notes = new ArrayList<>();
+        String SQLStatement = "SELECT id, content, timestamp FROM notes";
+
+        try(Statement statement = connection.createStatement()){
+            ResultSet resultSet = statement.executeQuery(SQLStatement);
+            while(resultSet.next()){
+                notes.add(mapResultSetToNote(resultSet));
+            }
+        } catch (SQLException e) {
+            throw new SQLException("Error trying to retrieve all notes", e);
+        }
+        return notes;
     }
 
     @Override
     public NotesEntity getById(Long aLong) throws SQLException {
         return null;
+    }
+
+    private NotesEntity mapResultSetToNote(ResultSet rs) throws SQLException {
+        NotesEntity note = new NotesEntity();
+        note.setID(rs.getLong("id"));
+        note.setContent(rs.getString("content"));
+        note.setTimestamp(rs.getTimestamp("timestamp").toLocalDateTime());
+        return note;
     }
 }
