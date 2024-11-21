@@ -36,10 +36,23 @@ public class NotesDAO implements GenericDAO<NotesEntity, Long> {
             throw new SQLException("Error registering the note", e);
         }
     }
-
+    // NOTE: Since this delete() will be used by all entities in the same way, should we create an abstract class that will implements our DAO interface and write a common method ?
+    /**
+     * Method we will use to delete a note from the database
+     * @param id which is the note's ID
+     * @throws SQLException
+     */
     @Override
-    public void delete(Long aLong) throws SQLException {
+    public void delete(Long id) throws SQLException {
+        String statement = "DELETE FROM notes where id = (?)";
 
+        try(PreparedStatement statement1 = connection.prepareStatement(statement)){
+            statement1.setLong(1, id);
+            statement1.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new SQLException("Error deleting note", e);
+        }
     }
 
     @Override
