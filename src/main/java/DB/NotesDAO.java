@@ -42,6 +42,7 @@ public class NotesDAO implements GenericDAO<NotesEntity, Long> {
             throw new SQLException("Error registering the note", e);
         }
     }
+
     // NOTE: Since this delete() will be used by all entities in the same way, should we create an abstract class that will implements our DAO interface and write a common delete() method ?
     /**
      * Method we will use to delete a note from the database
@@ -61,9 +62,23 @@ public class NotesDAO implements GenericDAO<NotesEntity, Long> {
         }
     }
 
+    //NOTE: check if we could pass a string as a param instead of an entity
+    /** Method used to update an existing note
+     *
+     * @param id is the note id
+     * @throws SQLException
+     */
     @Override
-    public void update(Long id) throws SQLException {
+    public void update(NotesEntity entity, Long id) throws SQLException {
+        String sqlStatement = "UPDATE notes SET (content) = ? WHERE id = ?";
 
+        try(PreparedStatement preparedStatement = connection.prepareStatement(sqlStatement)){
+            preparedStatement.setString(1, entity.getContent());
+            preparedStatement.setLong(2, id);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -84,7 +99,16 @@ public class NotesDAO implements GenericDAO<NotesEntity, Long> {
 
     @Override
     public NotesEntity getById(Long aLong) throws SQLException {
-        return null;
+        String sqlStatement = "SELECT id, content, timestamp FROM notes WHERE id = ?";
+        var note = new NotesEntity();
+
+        try(PreparedStatement preparedStatement = connection.prepareStatement(sqlStatement)){
+            preparedStatement.setLong(1, aLong);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            note =mapResultSetToNote(resultSet);
+        }
+
+        return note;
     }
 
     private NotesEntity mapResultSetToNote(ResultSet rs) throws SQLException {

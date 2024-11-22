@@ -1,4 +1,5 @@
-import DB.DatabaseInit;
+package DB;
+
 import config.Config;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
