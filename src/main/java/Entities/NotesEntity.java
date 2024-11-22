@@ -24,4 +24,8 @@ public class NotesEntity {
     public void setTimestamp(LocalDateTime timestamp) {
         this.timestamp = Timestamp.valueOf(timestamp);
     }
+
+    public Long getId(){
+        return this.ID;
+    }
 }
