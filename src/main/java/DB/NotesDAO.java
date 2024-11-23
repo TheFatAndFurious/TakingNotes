@@ -77,7 +77,10 @@ public class NotesDAO implements GenericDAO<NotesEntity, Long> {
         try(PreparedStatement preparedStatement = connection.prepareStatement(sqlStatement)){
             preparedStatement.setString(1, entity.getContent());
             preparedStatement.setLong(2, id);
-            preparedStatement.executeUpdate();
+            int affectedRows = preparedStatement.executeUpdate();
+            if (affectedRows == 0){
+                throw new SQLException("Error updating note, no rows have been affected");
+            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

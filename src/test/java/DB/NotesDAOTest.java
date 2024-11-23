@@ -40,11 +40,20 @@ class NotesDAOTest {
         notesDAO.delete(newEntry.getId());
         var hasBeenDeleted = notesDAO.getById(1L);
         assertNull(hasBeenDeleted, "Should be null after deletion");
-
     }
 
     @Test
-    void update() {
+    void update() throws SQLException {
+        NotesEntity testNote = new NotesEntity();
+        testNote.setContent("test for the update");
+        var newEntry = notesDAO.save(testNote);
+
+        newEntry.setContent("i've been updated");
+        notesDAO.update(newEntry, newEntry.getId());
+
+        var testIfUpdated = notesDAO.getById(newEntry.getId());
+        assertEquals("i've been updated", testIfUpdated.getContent(), "The content should be the same");
+
     }
 
     @Test
