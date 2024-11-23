@@ -102,15 +102,16 @@ public class NotesDAO implements GenericDAO<NotesEntity, Long> {
     @Override
     public NotesEntity getById(Long aLong) throws SQLException {
         String sqlStatement = "SELECT id, content, timestamp FROM notes WHERE id = ?";
-        var note = new NotesEntity();
 
         try(PreparedStatement preparedStatement = connection.prepareStatement(sqlStatement)){
             preparedStatement.setLong(1, aLong);
             ResultSet resultSet = preparedStatement.executeQuery();
-            note =mapResultSetToNote(resultSet);
+            if(resultSet.next()) {
+                return mapResultSetToNote(resultSet);
+            } else {
+                return null;
+            }
         }
-
-        return note;
     }
 
     private NotesEntity mapResultSetToNote(ResultSet rs) throws SQLException {
