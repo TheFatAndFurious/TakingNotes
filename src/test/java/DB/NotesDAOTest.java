@@ -68,12 +68,23 @@ class NotesDAOTest {
 
         var allEntries = notesDAO.getAll();
 
-        assertNotNull(allEntries, "Shouldnt be null");
+        assertNotNull(allEntries, "Shouldn't be null");
         assertEquals(2, allEntries.size(), "Should have 2 entries");
         assertTrue(allEntries.stream().anyMatch(n -> n.getContent().equals(testNote.getContent())), "Should have the same content");
     }
 
     @Test
-    void getById() {
+    void getById() throws SQLException {
+        NotesEntity testNote = new NotesEntity();
+        testNote.setContent("testing getById");
+        var newEntry = notesDAO.save(testNote);
+
+        var gotById = notesDAO.getById(newEntry.getId());
+
+        assertNotNull(gotById, "Shouldn't be null");
+        assertEquals(gotById.getContent(), testNote.getContent(), "Should have the same content");
+        assertEquals(gotById.getId(), newEntry.getId(), "Should have the same id");
+
+
     }
 }
