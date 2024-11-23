@@ -57,7 +57,20 @@ class NotesDAOTest {
     }
 
     @Test
-    void getAll() {
+    void getAll() throws SQLException {
+        NotesEntity testNote = new NotesEntity();
+        testNote.setContent("testing the getAll");
+        notesDAO.save(testNote);
+
+        NotesEntity testNote2 = new NotesEntity();
+        testNote2.setContent("testing the getAll again");
+        notesDAO.save(testNote2);
+
+        var allEntries = notesDAO.getAll();
+
+        assertNotNull(allEntries, "Shouldnt be null");
+        assertEquals(2, allEntries.size(), "Should have 2 entries");
+        assertTrue(allEntries.stream().anyMatch(n -> n.getContent().equals(testNote.getContent())), "Should have the same content");
     }
 
     @Test
