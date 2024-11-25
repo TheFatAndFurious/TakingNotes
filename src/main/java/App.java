@@ -8,14 +8,15 @@ import java.sql.SQLException;
 public class App {
     NoteService noteService;
     NotesDAO notesDAO;
+    DatabaseInit databaseInit;
 
     public App() throws SQLException {
-        this.notesDAO = new NotesDAO(DatabaseInit.Initialize());
+        this.databaseInit = new DatabaseInit();
+        this.notesDAO = new NotesDAO(databaseInit.Initialize());
         this.noteService = new NoteService(notesDAO);
     }
 
     public void runApp(String[] args) throws SQLException {
-        NotesDAO notesDAO = new NotesDAO(DatabaseInit.Initialize());
         if(args.length != 0){
             noteService.createNote(args[0]);
             var test = notesDAO.getAll();

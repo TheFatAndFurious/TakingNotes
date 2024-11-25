@@ -17,7 +17,7 @@ public class DatabaseInit {
     private static final  String user = Config.getProperties("db.user");
     private static final String password = Config.getProperties("db.password");
 
-    public static Connection Initialize() throws SQLException {
+    public Connection Initialize() throws SQLException {
 
         Connection connection = DriverManager.getConnection(DB_URL, user, password);
 
