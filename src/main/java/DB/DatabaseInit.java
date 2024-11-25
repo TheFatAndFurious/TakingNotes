@@ -12,7 +12,7 @@ import java.sql.Statement;
  * Class used to initialize an H2 database, 3 tables are being created:
  * one for the notes, one for the keywords and the third one as a joint table in case a note has several keywords
  */
-public  class DatabaseInit {
+public class DatabaseInit {
     private static final String DB_URL = Config.getProperties("db.url");
     private static final  String user = Config.getProperties("db.user");
     private static final String password = Config.getProperties("db.password");
