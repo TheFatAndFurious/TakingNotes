@@ -1,9 +1,9 @@
 import DB.DatabaseInit;
 import DB.NotesDAO;
-import Entities.NotesEntity;
 import Services.NoteService;
 
 import java.sql.SQLException;
+import java.util.Objects;
 
 public class App {
     NoteService noteService;
@@ -18,9 +18,15 @@ public class App {
 
     public void runApp(String[] args) throws SQLException {
         if(args.length != 0){
-            noteService.createNote(args[0]);
-            var test = notesDAO.getAll();
-            test.forEach(note -> System.out.println(note.getContent()));
+            var command = args[0];
+            if(Objects.equals(command, "list")){
+                noteService.listAllNotes();
+            }
+            if (command.equals("notes")){
+                noteService.createNote(args[0]);
+                var test = notesDAO.getAll();
+                test.forEach(note -> System.out.println(note.getContent()));
+            }
         }
         }
     }
