@@ -86,6 +86,27 @@ public class NotesDAO implements GenericDAO<NotesEntity, Long> {
         }
     }
 
+    /**
+     * Method used to retrieve the last N notes from the database
+     * @param limit represents the number of notes we want to retrieve
+     * @return a list of Notes
+     */
+    public List<NotesEntity> getLatestsNotes (int limit){
+        List<NotesEntity> latestsNotes = new ArrayList<>();
+        String sqlQuery = "SELECT id, content, timestamp FROM note ORDER BY timestamp DESC LIMIT ?";
+
+        try(PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery)) {
+            preparedStatement.setInt(1, limit);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()){
+                latestsNotes.add(mapResultSetToNote(resultSet));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return latestsNotes;
+    }
+
     @Override
     public List<NotesEntity> getAll() throws SQLException {
         List<NotesEntity> notes = new ArrayList<>();
