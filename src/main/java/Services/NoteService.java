@@ -2,9 +2,8 @@ package Services;
 
 import DB.NotesDAO;
 import Entities.NotesEntity;
-
-import java.sql.SQLException;
-import java.util.ArrayList;
+import exceptions.DataAccessException;
+import exceptions.ServiceException;
 
 public class NoteService {
     NotesDAO notesDAO;
@@ -13,18 +12,31 @@ public class NoteService {
         this.notesDAO = notesDAO;
     }
 
-    public void createNote (String content) throws SQLException {
+    public void createNote (String content) throws ServiceException {
         NotesEntity note = new NotesEntity();
         note.setContent(content);
-        notesDAO.save(note);
+        try{
+            notesDAO.save(note);
+        } catch (DataAccessException e) {
+            throw new ServiceException("Couldn't create note", e);
+        }
     }
 
-    public void listAllNotes() throws SQLException {
-        var notes = notesDAO.getAll();
-        notes.forEach(note -> System.out.println(note.getId() + " - " + note.getContent()));
+    public void listAllNotes() throws ServiceException {
+        try{
+            var notes = notesDAO.getAll();
+            notes.forEach(note -> System.out.println(note.getId() + " - " + note.getContent()));
+        } catch (DataAccessException e) {
+            throw new ServiceException("Couldn't list all notes", e);
+        }
     }
 
-    public void listMultipleNotesByDate() throws SQLException {
-
+    public void listLatestNotes(int limit) throws ServiceException {
+        try{
+            var notes = notesDAO.getLatestsNotes(limit);
+            notes.forEach(note -> System.out.println(note.getId() + " - " + note.getContent()));
+        } catch (DataAccessException e) {
+            throw new ServiceException("Couldn't list latest notes", e);
+        }
     }
 }

@@ -1,6 +1,7 @@
 package DB;
 
 import Entities.NotesEntity;
+import exceptions.DataAccessException;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -22,9 +23,14 @@ public class NotesDAO implements GenericDAO<NotesEntity, Long> {
     }
 
 
-
+    /**
+     * Method to save a Note
+     * @param entity
+     * @return a Note with its newly created ID
+     * @throws SQLException
+     */
     @Override
-    public NotesEntity save(NotesEntity entity) throws SQLException {
+    public NotesEntity save(NotesEntity entity) throws DataAccessException {
         String sqlStatement = "INSERT INTO notes (content) VALUES (?)";
         try(PreparedStatement statement = connection.prepareStatement(sqlStatement, Statement.RETURN_GENERATED_KEYS)){
             statement.setString(1, entity.getContent());
@@ -41,10 +47,10 @@ public class NotesDAO implements GenericDAO<NotesEntity, Long> {
             return entity;
             }
         } catch(SQLException e) {
-            throw new SQLException("Error registering the note", e);
+            throw new DataAccessException("Error registering the note", e);
         }
     }
-    // NOTE: Since this delete() will be used by all entities in the same way, should we create an abstract class that will implements our DAO interface and write a common delete() method ?
+    // NOTE: Since this delete() will be used by all entities in the same way, should we create an abstract class that will implement our DAO interface and write a common delete() method ?
 
     /**
      * Method we will use to delete a note from the database
@@ -52,7 +58,7 @@ public class NotesDAO implements GenericDAO<NotesEntity, Long> {
      * @throws SQLException
      */
     @Override
-    public void delete(Long id) throws SQLException {
+    public void delete(Long id) throws DataAccessException {
         String statement = "DELETE FROM notes where id = (?)";
 
         try(PreparedStatement statement1 = connection.prepareStatement(statement)){
@@ -60,7 +66,7 @@ public class NotesDAO implements GenericDAO<NotesEntity, Long> {
             statement1.executeUpdate();
 
         } catch (SQLException e) {
-            throw new SQLException("Error deleting note", e);
+            throw new DataAccessException("Error deleting note", e);
         }
     }
 
@@ -71,7 +77,7 @@ public class NotesDAO implements GenericDAO<NotesEntity, Long> {
      * @throws SQLException
      */
     @Override
-    public void update(NotesEntity entity, Long id) throws SQLException {
+    public void update(NotesEntity entity, Long id) throws DataAccessException {
         String sqlStatement = "UPDATE notes SET (content) = ? WHERE id = ?";
 
         try(PreparedStatement preparedStatement = connection.prepareStatement(sqlStatement)){
@@ -79,10 +85,10 @@ public class NotesDAO implements GenericDAO<NotesEntity, Long> {
             preparedStatement.setLong(2, id);
             int affectedRows = preparedStatement.executeUpdate();
             if (affectedRows == 0){
-                throw new SQLException("Error updating note, no rows have been affected");
+                throw new DataAccessException("Error updating note, no rows have been affected");
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DataAccessException("Couldn't update note with id " + id, e);
         }
     }
 
@@ -91,7 +97,7 @@ public class NotesDAO implements GenericDAO<NotesEntity, Long> {
      * @param limit represents the number of notes we want to retrieve
      * @return a list of Notes
      */
-    public List<NotesEntity> getLatestsNotes (int limit){
+    public List<NotesEntity> getLatestsNotes (int limit) throws DataAccessException{
         List<NotesEntity> latestsNotes = new ArrayList<>();
         String sqlQuery = "SELECT id, content, timestamp FROM note ORDER BY timestamp DESC LIMIT ?";
 
@@ -102,7 +108,7 @@ public class NotesDAO implements GenericDAO<NotesEntity, Long> {
                 latestsNotes.add(mapResultSetToNote(resultSet));
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DataAccessException("Couldn't fetch latest notes", e);
         }
         return latestsNotes;
     }
@@ -114,7 +120,7 @@ public class NotesDAO implements GenericDAO<NotesEntity, Long> {
      * @throws SQLException
      */
     @Override
-    public List<NotesEntity> getAll() throws SQLException {
+    public List<NotesEntity> getAll() throws DataAccessException {
         List<NotesEntity> notes = new ArrayList<>();
         String SQLStatement = "SELECT id, content, timestamp FROM notes";
 
@@ -124,7 +130,7 @@ public class NotesDAO implements GenericDAO<NotesEntity, Long> {
                 notes.add(mapResultSetToNote(resultSet));
             }
         } catch (SQLException e) {
-            throw new SQLException("Error trying to retrieve all notes", e);
+            throw new DataAccessException("Error trying to retrieve all notes", e);
         }
         return notes;
     }
@@ -137,7 +143,7 @@ public class NotesDAO implements GenericDAO<NotesEntity, Long> {
      * @throws SQLException
      */
     @Override
-    public NotesEntity getById(Long aLong) throws SQLException {
+    public NotesEntity getById(Long aLong) throws DataAccessException {
         String sqlStatement = "SELECT id, content, timestamp FROM notes WHERE id = ?";
 
         try(PreparedStatement preparedStatement = connection.prepareStatement(sqlStatement)){
@@ -148,6 +154,8 @@ public class NotesDAO implements GenericDAO<NotesEntity, Long> {
             } else {
                 return null;
             }
+        } catch (SQLException e){
+            throw new DataAccessException("Couldnt retrieve note " + aLong, e);
         }
     }
 
