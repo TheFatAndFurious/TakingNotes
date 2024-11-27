@@ -23,4 +23,8 @@ public class NoteService {
         var notes = notesDAO.getAll();
         notes.forEach(note -> System.out.println(note.getId() + " - " + note.getContent()));
     }
+
+    public void listMultipleNotesByDate() throws SQLException {
+
+    }
 }
