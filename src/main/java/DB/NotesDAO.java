@@ -107,6 +107,12 @@ public class NotesDAO implements GenericDAO<NotesEntity, Long> {
         return latestsNotes;
     }
 
+
+    /**
+     * Method used to retrive all notes from the database
+     * @return a list of notes
+     * @throws SQLException
+     */
     @Override
     public List<NotesEntity> getAll() throws SQLException {
         List<NotesEntity> notes = new ArrayList<>();
@@ -123,6 +129,13 @@ public class NotesDAO implements GenericDAO<NotesEntity, Long> {
         return notes;
     }
 
+
+    /**
+     * Method used to retrieve notes by their ID
+     * @param aLong which corrresponds to the note's ID
+     * @return a single Note
+     * @throws SQLException
+     */
     @Override
     public NotesEntity getById(Long aLong) throws SQLException {
         String sqlStatement = "SELECT id, content, timestamp FROM notes WHERE id = ?";
@@ -138,6 +151,12 @@ public class NotesDAO implements GenericDAO<NotesEntity, Long> {
         }
     }
 
+    /**
+     * The database returns a ResultSet so we need this helper function to transform it into a Note
+     * @param rs is a ResultSet
+     * @return a Note
+     * @throws SQLException
+     */
     private NotesEntity mapResultSetToNote(ResultSet rs) throws SQLException {
         NotesEntity note = new NotesEntity();
         note.setID(rs.getLong("id"));
