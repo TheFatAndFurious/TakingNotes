@@ -5,13 +5,13 @@ import exceptions.ServiceException;
 import picocli.CommandLine;
 
 @CommandLine.Command(
-        name="List all commands",
+        name="list",
         description = "Command to print all notes"
 )
 
 public class ListAllNotesCommand implements Runnable{
-    @CommandLine.Option(names = {"-l", "--list"}, description = "list all notes", required = true)
-    private String list;
+//    @CommandLine.Option(names = {"-l", "--limit"}, description = "list the last N notes", required = true)
+//    private Integer limit;
 
     private final NoteService noteService;
 
@@ -22,6 +22,7 @@ public class ListAllNotesCommand implements Runnable{
     @Override
     public void run() {
         try {
+            System.out.println("coucou from the listCommand");
             noteService.listAllNotes();
         } catch (ServiceException e){
             throw new RuntimeException(e);
