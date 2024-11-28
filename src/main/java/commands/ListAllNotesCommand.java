@@ -4,14 +4,19 @@ import Services.NoteService;
 import exceptions.ServiceException;
 import picocli.CommandLine;
 
+
+/**
+ * Class used to create all commands related to listing notes
+ * We are using the Picocli framework to parse args
+ */
 @CommandLine.Command(
         name="list",
         description = "Command to print all notes"
 )
 
 public class ListAllNotesCommand implements Runnable{
-//    @CommandLine.Option(names = {"-l", "--limit"}, description = "list the last N notes", required = true)
-//    private Integer limit;
+    @CommandLine.Option(names = {"-l", "--limit"}, description = "list the last N notes")
+    private Integer limit;
 
     private final NoteService noteService;
 
@@ -22,8 +27,7 @@ public class ListAllNotesCommand implements Runnable{
     @Override
     public void run() {
         try {
-            System.out.println("coucou from the listCommand");
-            noteService.listAllNotes();
+            noteService.listLatestNotes(limit);
         } catch (ServiceException e){
             throw new RuntimeException(e);
         }
