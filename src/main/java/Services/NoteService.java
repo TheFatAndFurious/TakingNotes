@@ -5,12 +5,18 @@ import Entities.NotesEntity;
 import exceptions.DataAccessException;
 import exceptions.ServiceException;
 
+
+/**
+ * Business logic for everything related to notes (create-list-delete-update)
+ * All these methods throw custom ServiceExceptions that will be handled at the App level
+ */
 public class NoteService {
     NotesDAO notesDAO;
 
     public NoteService(NotesDAO notesDAO){
         this.notesDAO = notesDAO;
     }
+
 
     public void createNote (String content) throws ServiceException {
         NotesEntity note = new NotesEntity();
