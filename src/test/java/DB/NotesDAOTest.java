@@ -1,6 +1,7 @@
 package DB;
 
 import Entities.NotesEntity;
+import exceptions.DataAccessException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -32,7 +33,7 @@ class NotesDAOTest {
     }
 
     @Test
-    void delete() throws SQLException {
+    void delete() throws SQLException, DataAccessException {
         NotesEntity testNote = new NotesEntity();
         testNote.setContent("test for deletion");
         var newEntry = notesDAO.save(testNote);

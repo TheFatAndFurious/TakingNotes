@@ -9,6 +9,14 @@ public class NotesEntity {
     Timestamp timestamp;
     KeywordEntity keyword;
 
+    public Long getId(){
+        return this.ID;
+    }
+
+    public Timestamp getTimestamp() {
+        return this.timestamp;
+    }
+
     public String getContent(){
         return this.content;
     }
@@ -25,7 +33,4 @@ public class NotesEntity {
         this.timestamp = Timestamp.valueOf(timestamp);
     }
 
-    public Long getId(){
-        return this.ID;
-    }
 }
