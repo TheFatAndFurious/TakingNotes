@@ -3,6 +3,7 @@ package DB;
 import exceptions.DataAccessException;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class AbstractDAO<T> implements GenericDAO<T, Long> {
@@ -15,6 +16,8 @@ public abstract class AbstractDAO<T> implements GenericDAO<T, Long> {
     protected abstract String getTableName();
     protected abstract void setStatementParameters(PreparedStatement smt, T entity);
     protected abstract String getUpdateSQL();
+    protected abstract String getAllSQL();
+    protected abstract T mapResultSetToEntity(ResultSet rs);
 
     @Override
     public T save(T entity) throws DataAccessException {
@@ -69,8 +72,20 @@ public abstract class AbstractDAO<T> implements GenericDAO<T, Long> {
     }
 
     @Override
-    public List getAll() throws DataAccessException {
-        return List.of();
+    public List<T> getAll() throws DataAccessException {
+        String sqlStatement = getAllSQL();
+        List<T> allEntries = new ArrayList<>();
+
+        try(Statement statement = connection.createStatement()) {
+            ResultSet resultSet = statement.executeQuery(sqlStatement);
+            while(resultSet.next()){
+                allEntries.add(mapResultSetToEntity(resultSet));
+            }
+
+        } catch (SQLException e) {
+            throw new DataAccessException("Could not get all entries", e);
+        } ;
+        return allEntries;
     }
 
     @Override

@@ -165,7 +165,7 @@ public class NotesDAO implements GenericDAO<NotesEntity, Long> {
      * @return a Note
      * @throws SQLException
      */
-    private NotesEntity mapResultSetToNote(ResultSet rs) throws SQLException {
+    public NotesEntity mapResultSetToNote(ResultSet rs) throws SQLException {
         NotesEntity note = new NotesEntity();
         note.setID(rs.getLong("id"));
         note.setContent(rs.getString("content"));
