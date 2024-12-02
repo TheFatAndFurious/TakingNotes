@@ -14,6 +14,7 @@ public abstract class AbstractDAO<T> implements GenericDAO<T, Long> {
 
     protected abstract String getTableName();
     protected abstract void setStatementParameters(PreparedStatement smt, T entity);
+    protected abstract String getUpdateSQL();
 
     @Override
     public T save(T entity) throws DataAccessException {
@@ -52,8 +53,19 @@ public abstract class AbstractDAO<T> implements GenericDAO<T, Long> {
     }
 
     @Override
-    public void update(Object identity, Object o) throws DataAccessException {
+    public void update(String content, Long id) throws DataAccessException {
+        String sqlStatement = getUpdateSQL();
 
+        try(PreparedStatement preparedStatement = connection.prepareStatement(sqlStatement)) {
+            preparedStatement.setString(1, content);
+            preparedStatement.setLong(2, id);
+            int affectedRows = preparedStatement.executeUpdate();
+            if (affectedRows == 0){
+                throw new DataAccessException("Error, could not update row " + id + ", no rows affected");
+            }
+        } catch (SQLException e) {
+            throw new DataAccessException("Error, could not update row " + id ,e);
+        } ;
     }
 
     @Override
