@@ -5,7 +5,7 @@ import exceptions.DataAccessException;
 import java.sql.*;
 import java.util.List;
 
-public class AbstractDAO<T> implements GenericDAO<T, Long> {
+public abstract class AbstractDAO<T> implements GenericDAO<T, Long> {
     protected final Connection connection;
 
     public AbstractDAO(Connection connection){
@@ -38,8 +38,17 @@ public class AbstractDAO<T> implements GenericDAO<T, Long> {
     }
 
     @Override
-    public void delete(Object o) throws DataAccessException {
-
+    public void delete(Long id) throws DataAccessException {
+        String sqlStatement = "DELETE FROM " + getTableName() + " WHERE id = (?)";
+        try(PreparedStatement preparedStatement = connection.prepareStatement(sqlStatement)) {
+            preparedStatement.setLong(1, id);
+            int affectedRows = preparedStatement.executeUpdate();
+            if(affectedRows == 0){
+                throw new DataAccessException("Could not delete entry: " + id + ", no rows affected");
+            }
+        } catch (SQLException e) {
+            throw new DataAccessException("Error: could not delete entry" + id, e);
+        } ;
     }
 
     @Override
