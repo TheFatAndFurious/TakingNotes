@@ -8,12 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Data access layer for the Notes, we should be able to:
- *  - create
- *  - read (retrieve one or multiple notes using params like timestamps or keywords)
- *  - delete
- *  - update
- *
+ * Data access layer for the Notes, it is a subclass of the AbstractDAO which provides the main methods to interact with the DB:
  */
 public class NotesDAO extends AbstractDAO {
     Connection connection;
@@ -43,12 +38,7 @@ public class NotesDAO extends AbstractDAO {
         return latestNotes;
     }
 
-    /**
-     * The database returns a ResultSet so we need this helper function to transform it into a Note
-     * @param rs is a ResultSet
-     * @return a Note
-     * @throws SQLException
-     */
+
 
     @Override
     public String getTableName(){
@@ -60,16 +50,30 @@ public class NotesDAO extends AbstractDAO {
 
     }
 
+    /**
+     * The helper method used to return the right sql query to update the notes table
+     * @return an SQL query
+     */
     @Override
     protected String getUpdateSQL() {
         return "UPDATE notes SET content = (?) WHERE id = (?)";
     }
 
+    /**
+     * The method used to provide the right SQL query to get all entries from the notes table
+     * @return an SQL query
+     */
     @Override
     protected String getAllSQL() {
         return "SELECT id, content, timestamp FROM notes";
     }
 
+    /**
+     * The database returns a ResultSet so we need this helper function to transform it into a Note
+     * @param rs is a ResultSet
+     * @return a Note
+     * @throws SQLException
+     */
     @Override
     protected NotesEntity mapResultSetToEntity(ResultSet rs) throws SQLException {
         NotesEntity note = new NotesEntity();
