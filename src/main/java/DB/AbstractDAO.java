@@ -3,6 +3,7 @@ package DB;
 import Entities.Identifiable;
 import exceptions.DataAccessException;
 
+import javax.swing.text.html.parser.Entity;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,17 +16,17 @@ public abstract class AbstractDAO<T extends Identifiable> implements GenericDAO<
     }
 
     protected abstract String getTableName();
-    protected abstract void setStatementParameters(PreparedStatement smt, T entity);
     protected abstract String getUpdateSQL();
     protected abstract String getAllSQL();
     protected abstract T mapResultSetToEntity(ResultSet rs) throws SQLException;
     protected abstract String getByIdSQL();
+    protected abstract String saveSQL();
 
     @Override
-    public T save(T entity ) throws DataAccessException {
-        String sqlStatement = "INSERT INTO " + getTableName() + "(...) VALUES  (...) ";
+    public T save(Entity content ) throws DataAccessException {
+        String sqlStatement = saveSQL();
         try(PreparedStatement preparedStatement = connection.prepareStatement(sqlStatement, Statement.RETURN_GENERATED_KEYS)){
-            setStatementParameters(preparedStatement, entity);
+            preparedStatement.setString(content.);
             int affectedRows = preparedStatement.executeUpdate();
             if (affectedRows == 0){
                 throw new DataAccessException("Error: no rows have been affected");

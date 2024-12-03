@@ -77,7 +77,7 @@ public class NotesDAO extends AbstractDAO {
     @Override
     protected NotesEntity mapResultSetToEntity(ResultSet rs) throws SQLException {
         NotesEntity note = new NotesEntity();
-        note.setID(rs.getLong("id"));
+        note.setId(rs.getLong("id"));
         note.setContent(rs.getString("content"));
         note.setTimestamp(rs.getTimestamp("timestamp").toLocalDateTime());
         return note;
@@ -86,5 +86,9 @@ public class NotesDAO extends AbstractDAO {
     @Override
     protected String getByIdSQL() {
         return "SELECT id, content, timestamp FROM notes WHERE id = (?)";
+    }
+
+    protected String saveSQL(){
+        return "INSERT INTO notes (...) VALUES  (...) ";
     }
 }

@@ -3,7 +3,7 @@ package Entities;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
-public class NotesEntity implements Identifiable {
+public class NotesEntity extends Identifiable {
     Long ID;
     String content;
     Timestamp timestamp;
@@ -23,11 +23,12 @@ public class NotesEntity implements Identifiable {
         return this.timestamp;
     }
 
+    @Override
     public String getContent(){
         return this.content;
     }
 
-
+    @Override
     public void setContent(String content) {
         this.content = content;
     }
