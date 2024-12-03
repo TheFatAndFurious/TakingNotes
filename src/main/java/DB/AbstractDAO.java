@@ -17,7 +17,8 @@ public abstract class AbstractDAO<T> implements GenericDAO<T, Long> {
     protected abstract void setStatementParameters(PreparedStatement smt, T entity);
     protected abstract String getUpdateSQL();
     protected abstract String getAllSQL();
-    protected abstract T mapResultSetToEntity(ResultSet rs);
+    protected abstract T mapResultSetToEntity(ResultSet rs) throws SQLException;
+    protected abstract String getByIdSQL();
 
     @Override
     public T save(T entity) throws DataAccessException {
@@ -89,8 +90,17 @@ public abstract class AbstractDAO<T> implements GenericDAO<T, Long> {
     }
 
     @Override
-    public Object getById(Object o) throws DataAccessException {
-        return null;
+    public T getById(Long id) throws DataAccessException {
+        String sqlStatement =  getByIdSQL();
+        T entry;
+        try(PreparedStatement preparedStatement = connection.prepareStatement(sqlStatement)){
+            preparedStatement.setLong(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            entry = mapResultSetToEntity(resultSet);
+        } catch (SQLException e) {
+            throw new DataAccessException("Error, could not fetch " + id , e);
+        }
+        return entry;
     }
 
 }
