@@ -1,12 +1,13 @@
 package DB;
 
+import Entities.Identifiable;
 import exceptions.DataAccessException;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class AbstractDAO<T> implements GenericDAO<T, Long> {
+public abstract class AbstractDAO<T extends Identifiable> implements GenericDAO<T, Long> {
     protected final Connection connection;
 
     public AbstractDAO(Connection connection){
@@ -21,7 +22,7 @@ public abstract class AbstractDAO<T> implements GenericDAO<T, Long> {
     protected abstract String getByIdSQL();
 
     @Override
-    public T save(T entity) throws DataAccessException {
+    public T save(T entity ) throws DataAccessException {
         String sqlStatement = "INSERT INTO " + getTableName() + "(...) VALUES  (...) ";
         try(PreparedStatement preparedStatement = connection.prepareStatement(sqlStatement, Statement.RETURN_GENERATED_KEYS)){
             setStatementParameters(preparedStatement, entity);
@@ -31,7 +32,7 @@ public abstract class AbstractDAO<T> implements GenericDAO<T, Long> {
             }
             try (ResultSet keys = preparedStatement.getGeneratedKeys()){
                 if(keys.next()){
-                    entity.setID(keys.getLong(1));
+                    entity.setId(keys.getLong(1));
                 } else {
                     throw new DataAccessException("Failure to save note, no ID has been generated");
                 }

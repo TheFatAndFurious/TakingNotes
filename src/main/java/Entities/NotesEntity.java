@@ -3,14 +3,20 @@ package Entities;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
-public class NotesEntity {
+public class NotesEntity implements Identifiable {
     Long ID;
     String content;
     Timestamp timestamp;
     KeywordEntity keyword;
 
+    @Override
     public Long getId(){
         return this.ID;
+    }
+
+    @Override
+    public void setId(Long id) {
+        this.ID = id;
     }
 
     public Timestamp getTimestamp() {
@@ -21,9 +27,6 @@ public class NotesEntity {
         return this.content;
     }
 
-    public void setID(Long id){
-        this.ID = id;
-    }
 
     public void setContent(String content) {
         this.content = content;

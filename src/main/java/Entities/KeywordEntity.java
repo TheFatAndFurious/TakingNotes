@@ -1,16 +1,8 @@
 package Entities;
 
-public class KeywordEntity {
-    int ID;
+public class KeywordEntity implements Identifiable{
+    Long ID;
     String name;
-
-    public int getID() {
-        return ID;
-    }
-
-    public void setID(int ID) {
-        this.ID = ID;
-    }
 
     public String getName() {
         return name;
@@ -18,5 +10,15 @@ public class KeywordEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public Long getId() {
+        return ID;
+    }
+
+    @Override
+    public void setId(Long id) {
+        this.ID = id;
     }
 }
