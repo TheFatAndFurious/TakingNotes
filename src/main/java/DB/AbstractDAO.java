@@ -23,24 +23,24 @@ public abstract class AbstractDAO<T extends Identifiable> implements GenericDAO<
     protected abstract String saveSQL();
 
     @Override
-    public T save(Entity content ) throws DataAccessException {
+    public Identifiable save(Identifiable content ) throws DataAccessException {
         String sqlStatement = saveSQL();
         try(PreparedStatement preparedStatement = connection.prepareStatement(sqlStatement, Statement.RETURN_GENERATED_KEYS)){
-            preparedStatement.setString(content.);
+            preparedStatement.setString(1, content.getContent());
             int affectedRows = preparedStatement.executeUpdate();
             if (affectedRows == 0){
                 throw new DataAccessException("Error: no rows have been affected");
             }
             try (ResultSet keys = preparedStatement.getGeneratedKeys()){
                 if(keys.next()){
-                    entity.setId(keys.getLong(1));
+                    content.setId(keys.getLong(1));
                 } else {
                     throw new DataAccessException("Failure to save note, no ID has been generated");
                 }
             }
-            return entity;
+            return content;
         } catch (SQLException e){
-            throw new DataAccessException("Error: couldn't save the " + entity);
+            throw new DataAccessException("Error: couldn't save the " + content);
         }
     }
 
